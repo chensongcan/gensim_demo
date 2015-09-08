@@ -36,7 +36,7 @@ texts_stemmed = [[st.stem(word) for word in document] for document in texts_filt
 
 # 过滤低频词
 all_stems = sum(texts_stemmed, [])
-stems_once = set(stem for stem in set(all_stems) if all_stems.count(stem) == 1)
+stems_once = {stem for stem in set(all_stems) if all_stems.count(stem) == 1}
 texts = [[stem for stem in text if stem not in stems_once] for text in texts_stemmed]
 
 # 抽取词袋
@@ -52,10 +52,10 @@ tfidf = gensim.models.TfidfModel(corpus)
 corpus_tfidf = tfidf[corpus]
 
 # # 建立LSI模型
-# lsi = gensim.models.LsiModel(corpus_tfidf, id2word=dictionary, num_topics=10)
+# lsi = gensim_demo.models.LsiModel(corpus_tfidf, id2word=dictionary, num_topics=10)
 #
 # # 建立相似度索引
-# index = gensim.similarities.MatrixSimilarity(lsi[corpus])
+# index = gensim_demo.similarities.MatrixSimilarity(lsi[corpus])
 #
 # query = texts[210]
 # # 查询向量化
@@ -80,10 +80,10 @@ query_lda = lda[query_bow]
 sims = index[query_lda]
 
 # # 建立HDP模型
-# hdp = gensim.models.hdpmodel.HdpModel(corpus, id2word=dictionary)
+# hdp = gensim_demo.models.hdpmodel.HdpModel(corpus, id2word=dictionary)
 #
 # # 建立相似度索引
-# index = gensim.similarities.MatrixSimilarity(hdp[corpus])
+# index = gensim_demo.similarities.MatrixSimilarity(hdp[corpus])
 #
 # query = texts[210]
 # # 查询向量化
