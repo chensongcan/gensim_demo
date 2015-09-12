@@ -52,10 +52,10 @@ tfidf = gensim.models.TfidfModel(corpus)
 corpus_tfidf = tfidf[corpus]
 
 # # 建立LSI模型
-# lsi = gensim_demo.models.LsiModel(corpus_tfidf, id2word=dictionary, num_topics=10)
+# lsi = gensim.models.LsiModel(corpus_tfidf, id2word=dictionary, num_topics=10)
 #
 # # 建立相似度索引
-# index = gensim_demo.similarities.MatrixSimilarity(lsi[corpus])
+# index = gensim.similarities.MatrixSimilarity(lsi[corpus])
 #
 # query = texts[210]
 # # 查询向量化
@@ -80,10 +80,10 @@ query_lda = lda[query_bow]
 sims = index[query_lda]
 
 # # 建立HDP模型
-# hdp = gensim_demo.models.hdpmodel.HdpModel(corpus, id2word=dictionary)
+# hdp = gensim.models.HdpModel(corpus, id2word=dictionary)
 #
 # # 建立相似度索引
-# index = gensim_demo.similarities.MatrixSimilarity(hdp[corpus])
+# index = gensim.similarities.MatrixSimilarity(hdp[corpus])
 #
 # query = texts[210]
 # # 查询向量化
@@ -93,7 +93,7 @@ sims = index[query_lda]
 # # 计算相似度
 # sims = index[query_hdp]
 
-print courses_name[210], query_lda
+print courses_name[210], query_lsi
 sort_sims = sorted(enumerate(sims), key=lambda item: -item[1])
 for idx in sort_sims[0:10]:
     print courses_name[idx[0]], idx
