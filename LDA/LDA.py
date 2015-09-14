@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import operator
 
 import nltk
 import gensim
 
 logging.basicConfig(format="%(asctime)s : %(levelname)s : %(message)s", level=logging.INFO)
+
+query_idx = 210
 
 # 加载数据
 courses = [line.strip() for line in file('coursera_corpus')]
@@ -31,7 +34,7 @@ texts_filtered = [[word for word in document if word not in english_punctuations
                   texts_filtered_stopwords]
 
 # 单词词干化
-st = nltk.stem.LancasterStemmer()
+st = nltk.stem.SnowballStemmer(language="english")
 texts_stemmed = [[st.stem(word) for word in document] for document in texts_filtered]
 
 # 过滤低频词
@@ -51,33 +54,33 @@ tfidf = gensim.models.TfidfModel(corpus)
 # 建立用TF-IDF值表示的文档向量
 corpus_tfidf = tfidf[corpus]
 
-# # 建立LSI模型
-# lsi = gensim.models.LsiModel(corpus_tfidf, id2word=dictionary, num_topics=10)
-#
-# # 建立相似度索引
-# index = gensim.similarities.MatrixSimilarity(lsi[corpus])
-#
-# query = texts[210]
-# # 查询向量化
-# query_bow = dictionary.doc2bow(query)
-# # 映射到主题空间
-# query_lsi = lsi[query_bow]
-# # 计算相似度
-# sims = index[query_lsi]
-
-# 建立LDA模型
-lda = gensim.models.LdaModel(corpus, id2word=dictionary, num_topics=50, passes=10)
+# 建立LSI模型
+lsi = gensim.models.LsiModel(corpus_tfidf, id2word=dictionary, num_topics=10)
 
 # 建立相似度索引
-index = gensim.similarities.MatrixSimilarity(lda[corpus])
+index = gensim.similarities.MatrixSimilarity(lsi[corpus])
 
-query = texts[210]
+query = texts[query_idx]
 # 查询向量化
 query_bow = dictionary.doc2bow(query)
 # 映射到主题空间
-query_lda = lda[query_bow]
+query_lsi = lsi[query_bow]
 # 计算相似度
-sims = index[query_lda]
+sims = index[query_lsi]
+
+# # 建立LDA模型
+# lda = gensim.models.LdaModel(corpus, id2word=dictionary, num_topics=50, passes=10)
+#
+# # 建立相似度索引
+# index = gensim.similarities.MatrixSimilarity(lda[corpus])
+#
+# query = texts[query_idx]
+# # 查询向量化
+# query_bow = dictionary.doc2bow(query)
+# # 映射到主题空间
+# query_lda = lda[query_bow]
+# # 计算相似度
+# sims = index[query_lda]
 
 # # 建立HDP模型
 # hdp = gensim.models.HdpModel(corpus, id2word=dictionary)
@@ -85,7 +88,7 @@ sims = index[query_lda]
 # # 建立相似度索引
 # index = gensim.similarities.MatrixSimilarity(hdp[corpus])
 #
-# query = texts[210]
+# query = texts[query_idx]
 # # 查询向量化
 # query_bow = dictionary.doc2bow(query)
 # # 映射到主题空间
@@ -93,7 +96,7 @@ sims = index[query_lda]
 # # 计算相似度
 # sims = index[query_hdp]
 
-print courses_name[210], query_lsi
-sort_sims = sorted(enumerate(sims), key=lambda item: -item[1])
-for idx in sort_sims[0:10]:
+print courses_name[query_idx], query_lsi
+sort_sims = sorted(enumerate(sims), key=operator.itemgetter(1), reverse=True)
+for idx in sort_sims[:10]:
     print courses_name[idx[0]], idx
