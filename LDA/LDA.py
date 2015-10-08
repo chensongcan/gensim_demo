@@ -59,12 +59,14 @@ lsi = gensim.models.LsiModel(corpus_tfidf, id2word=dictionary, num_topics=10)
 
 # 建立相似度索引
 index = gensim.similarities.MatrixSimilarity(lsi[corpus])
+# index = gensim.similarities.Similarity("lsiIndex", lsi[corpus], num_features=lsi.num_topics, num_best=10)
 
-query = texts[query_idx]
-# 查询向量化
-query_bow = dictionary.doc2bow(query)
-# 映射到主题空间
-query_lsi = lsi[query_bow]
+query_lsi = lsi[corpus[query_idx]]
+# query = texts[query_idx]
+# # 查询向量化
+# query_bow = dictionary.doc2bow(query)
+# # 映射到主题空间
+# query_lsi = lsi[query_bow]
 # 计算相似度
 sims = index[query_lsi]
 
@@ -100,3 +102,5 @@ print courses_name[query_idx], query_lsi
 sort_sims = sorted(enumerate(sims), key=operator.itemgetter(1), reverse=True)
 for idx in sort_sims[:10]:
     print courses_name[idx[0]], idx
+# for idx in sims:
+#     print courses_name[idx[0]], idx
