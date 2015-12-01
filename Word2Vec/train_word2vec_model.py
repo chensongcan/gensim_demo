@@ -4,7 +4,6 @@ import logging
 import multiprocessing
 import os
 import sys
-
 import gensim
 
 if __name__ == '__main__':
