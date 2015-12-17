@@ -26,9 +26,11 @@ def build_nmf():
     nmf = sklearn.decomposition.NMF(n_components=20, verbose=1)
     corpus = nmf.fit_transform(corpus_tfidf)
     index = sklearn.metrics.pairwise.cosine_distances(corpus)
-    print index
     query = corpus[query_idx]
     sims = index[query_idx]
+
+    feature_names = vectorizer.get_feature_names()
+    print_top_words(nmf, feature_names)
 
 
 def build_lda():
@@ -39,10 +41,18 @@ def build_lda():
     lda = sklearn.decomposition.LatentDirichletAllocation(n_topics=20, learning_method="online", max_iter=50,
                                                           evaluate_every=10, verbose=1)
     corpus = lda.fit_transform(corpus_tf)
-    print lda.perplexity(corpus_tf)
     index = sklearn.metrics.pairwise.cosine_distances(corpus)
     query = corpus[query_idx]
     sims = index[query_idx]
+
+    feature_names = vectorizer.get_feature_names()
+    print_top_words(lda, feature_names)
+
+
+def print_top_words(model, feature_names):
+    for topic_idx, topic in enumerate(model.components_):
+        print "Topic #%d:" % topic_idx
+        print " ".join([feature_names[i] for i in topic.argsort()[:-10 - 1:-1]])
 
 
 def output():
