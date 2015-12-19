@@ -2,7 +2,6 @@
 
 from __future__ import absolute_import
 from __future__ import division
-import math
 import operator
 import gensim
 
@@ -37,8 +36,7 @@ def build_lsi():
 def build_lda():
     """建立LDA模型"""
     global query, sims
-    lda = gensim.models.LdaModel(corpus, id2word=dictionary, num_topics=20, passes=50)
-    print math.exp(-lda.log_perplexity(lda[corpus]))
+    lda = gensim.models.LdaModel(corpus, id2word=dictionary, num_topics=100, passes=100, alpha=50 / 100, eta=0.01)
     index = gensim.similarities.MatrixSimilarity(lda[corpus])
     query = lda[corpus[query_idx]]
     sims = index[query]

@@ -38,8 +38,9 @@ def build_lda():
     vectorizer = sklearn.feature_extraction.text.CountVectorizer()
     corpus_tf = vectorizer.fit_transform(texts)
 
-    lda = sklearn.decomposition.LatentDirichletAllocation(n_topics=20, learning_method="online", max_iter=50,
-                                                          evaluate_every=10, verbose=1)
+    lda = sklearn.decomposition.LatentDirichletAllocation(n_topics=100, learning_method="online", max_iter=100,
+                                                          evaluate_every=10, verbose=1, doc_topic_prior=50 / 100,
+                                                          topic_word_prior=0.01)
     corpus = lda.fit_transform(corpus_tf)
     index = sklearn.metrics.pairwise.cosine_distances(corpus)
     query = corpus[query_idx]
