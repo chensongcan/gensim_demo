@@ -63,13 +63,9 @@ def get_pos():
     读取position信息
     :return:
     """
-    pos_col = []
-    pos_col.extend(_get_pos("company_position_new"))
-    pos_col.extend(_get_pos("company_position"))
-    pos_col.extend(_get_pos("company_position_old"))
-
-    logger.log.info("all positions have been read, count: %s." % (len(pos_col),))
-    return pos_col
+    yield _get_pos("company_position_new")
+    yield _get_pos("company_position")
+    yield _get_pos("company_position_old")
 
 
 def _get_pos(table_name):
@@ -82,7 +78,6 @@ def _get_pos(table_name):
 
     pgsql_cursor = get_cursor()
     pgsql_cursor.execute(sql_pos)
-    raw_pos = pgsql_cursor.fetchall()
+    yield pgsql_cursor
 
-    logger.log.info("[%s] has been read, count: %s." % (table_name, len(raw_pos),))
-    return raw_pos
+    logger.log.info("[%s] has been read, count: %s." % (table_name, len(pgsql_cursor.rowcount),))

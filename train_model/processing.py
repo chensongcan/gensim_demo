@@ -26,26 +26,6 @@ def init(jieba_parallel=False):
     logger.log.info("module [preprocess] initialized.")
 
 
-def pos_process(raw_pos):
-    """
-    预处理position信息
-    :param raw_pos: company_position_new表
-    :return:
-    """
-    # 去重
-    clean_pos = []
-    pos_without_id = []
-    for pos in raw_pos:
-        ele_without_id = copy.deepcopy(pos)
-        del ele_without_id["id"]
-        if ele_without_id not in pos_without_id:
-            clean_pos.append(pos)
-            pos_without_id.append(ele_without_id)
-
-    logger.log.info("raw_pos was processed.")
-    return clean_pos
-
-
 def text_process(pos):
     """
     处理position的文字信息
