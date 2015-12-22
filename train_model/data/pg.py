@@ -82,5 +82,5 @@ def _get_pos(table_name):
     pgsql_cursor = get_cursor()
     pgsql_cursor.execute(sql_pos)
 
-    logger.log.info("[%s] has been read, count: %s." % (table_name, len(pgsql_cursor.rowcount),))
+    logger.log.info("[%s] has been read, count: %s." % (table_name, pgsql_cursor.rowcount,))
     return pgsql_cursor
