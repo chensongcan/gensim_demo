@@ -3,7 +3,7 @@
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import unicode_literals
-import copy
+import json
 import re
 import gensim
 import jieba
@@ -26,38 +26,31 @@ def init(jieba_parallel=False):
     logger.log.info("module [preprocess] initialized.")
 
 
-def text_process(pos):
+def text_process():
     """
     处理position的文字信息
-    :param pos:
     :return:
     """
-    contents = _clean_content(pos)
-    util.topic_model.build_lda(contents)
+    with open("pos_data.txt", "w") as f:
+        for row in _clean_content():
+            f.write(json.dumps(row, encoding="utf-8") + "\n")
+
+    util.topic_model.build_lda()
 
     logger.log.info("text was processed.")
 
 
-def _clean_content(raw):
+def _clean_content():
     """
     文本清洗
-    :param raw:
     :return:
     """
     # 过滤空白字符
     blank_re = re.compile(r"\s+")
-    texts_raw = [blank_re.split(ele["description"]) for ele in raw]
-
-    # 分词
-    texts_splited = [reduce(lambda x, y: x + jieba.lcut(y), text, []) for text in texts_raw]
-
-    # 过滤停用词
-    texts_filtered = [[word for word in text if word not in data.stopwords] for text in texts_splited]
-
-    # 过滤低频词
-    # all_words = sum(texts_filtered, [])
-    # words_once = {word for word in set(all_words) if all_words.count(word) == 1}
-    # texts = [[word for word in text if word not in words_once] for text in texts_filtered]
-
-    logger.log.info("text was cleaned.")
-    return texts_filtered
+    for row in data.pg.get_pos():
+        text = blank_re.split(row["description"])
+        # 分词
+        text_splited = reduce(lambda x, y: x + jieba.lcut(y), text, [])
+        # 过滤停用词
+        text_filtered = [word for word in text_splited if word not in data.stopwords]
+        yield text_filtered

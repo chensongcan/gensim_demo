@@ -6,8 +6,7 @@ from __future__ import unicode_literals
 import conf
 import data
 import logger
-import preprocess
-
+import processing
 
 if __name__ == "__main__":
     logger.log.info("Model Training is running...")
@@ -16,12 +15,8 @@ if __name__ == "__main__":
 
     data.pg.init()
 
-    raw_pos = data.pg.get_pos()
+    processing.text_process()
 
     data.pg.close()
-
-    raw_pos = preprocess.pos_process(raw_pos)
-
-    preprocess.text_process(raw_pos)
 
     logger.log.info("Model Training finished.")
