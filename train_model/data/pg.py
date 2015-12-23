@@ -35,7 +35,7 @@ def init():
 def get_cursor():
     """
     获取PostgreSQL游标
-    :rtype: NoneType
+    :rtype: extensions.cursor
     """
     global pgsql_conn
     if pgsql_conn.closed:

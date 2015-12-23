@@ -10,7 +10,7 @@ import logger
 
 def _get_doc_col():
     """
-    :rtype: generator
+    :rtype: __generator
     """
     cnt = 0
     for row in open("./tmp/pos_data.txt", "r"):
