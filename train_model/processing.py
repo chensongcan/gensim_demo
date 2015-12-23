@@ -23,7 +23,7 @@ def init(jieba_parallel=False):
 
     gensim.logger.setLevel("WARNING")
 
-    logger.log.info("module [preprocess] initialized.")
+    logger.log.info("module [processing] initialized.")
 
 
 def text_process():
@@ -32,12 +32,18 @@ def text_process():
     :rtype: NoneType
     """
     with open("pos_data.txt", "w") as f:
+        cnt = 0
         for row in _clean_content():
             f.write(json.dumps(row, encoding="utf-8") + "\n")
+            cnt += 1
+            if cnt % 1000 == 0:
+                logger.log.info("texts is saving... number: %s." % (cnt,))
+
+    logger.log.info("texts was saved on disk.")
 
     util.topic_model.build_lda()
 
-    logger.log.info("text was processed.")
+    logger.log.info("texts was processed.")
 
 
 def _clean_content():
