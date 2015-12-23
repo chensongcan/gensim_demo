@@ -163,7 +163,7 @@ Temporary Items
 mecab-chinesedic-binary/
 model/
 test/
-
+tmp/
 pos_corpus.mm*
 pos_data.txt
 position.dict

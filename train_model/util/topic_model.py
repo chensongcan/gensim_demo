@@ -13,7 +13,7 @@ def _get_doc_col():
     :rtype: generator
     """
     cnt = 0
-    for row in open("pos_data.txt", "r"):
+    for row in open("./tmp/pos_data.txt", "r"):
         yield json.loads(row[:-1], encoding="utf-8")
         cnt += 1
         if cnt % 1000 == 0:
@@ -38,7 +38,7 @@ def _build_dictionary():
     :rtype: gensim.corpora.Dictionary
     """
     dictionary = gensim.corpora.Dictionary(_get_doc_col(), prune_at=None)
-    dictionary.save("position.dict")
+    dictionary.save("./tmp/position.dict")
 
     logger.log.info("dictionary was saved on disk.")
     return dictionary
@@ -50,8 +50,8 @@ def _build_corpus(dictionary):
     :type dictionary: gensim.corpora.Dictionary
     :rtype: gensim.corpora.MmCorpus
     """
-    gensim.corpora.MmCorpus.serialize("pos_corpus.mm", _get_corpus(dictionary))
-    corpus = gensim.corpora.MmCorpus("pos_corpus.mm")
+    gensim.corpora.MmCorpus.serialize("./tmp/pos_corpus.mm", _get_corpus(dictionary))
+    corpus = gensim.corpora.MmCorpus("./tmp/pos_corpus.mm")
 
     logger.log.info("corpus was saved on disk.")
     return corpus
@@ -65,7 +65,7 @@ def _build_lda(corpus):
     """
     # 建立LDA模型
     lda = gensim.models.LdaMulticore(corpus, num_topics=300, passes=200, alpha=50 / 300, eta=0.01)
-    lda.save("lda.model")
+    lda.save("./tmp/lda.model")
     logger.log.info("lda model was saved on disk.")
     return lda
 

@@ -33,7 +33,7 @@ def text_process():
     处理position的文字信息
     :rtype: NoneType
     """
-    with open("pos_data.txt", "w") as f:
+    with open("./tmp/pos_data.txt", "w") as f:
         cnt = 0
         for row in _clean_content():
             f.write(json.dumps(row, encoding="utf-8") + "\n")
