@@ -17,7 +17,7 @@ psycopg2.extensions.register_type(psycopg2.extensions.UNICODEARRAY)
 def init():
     """
     创建PostgreSQL连接
-    :return:
+    :rtype: NoneType
     """
     global pgsql_pool, pgsql_conn
     pgsql_pool = psycopg2.pool.SimpleConnectionPool(3, 5, database=conf.pg.settings["database"],
@@ -35,7 +35,7 @@ def init():
 def get_cursor():
     """
     获取PostgreSQL游标
-    :return:
+    :rtype: NoneType
     """
     global pgsql_conn
     if pgsql_conn.closed:
@@ -48,7 +48,7 @@ def get_cursor():
 def close():
     """
     释放PostgreSQL连接
-    :return:
+    :rtype: NoneType
     """
     global pgsql_pool
     if not pgsql_pool.closed:
@@ -61,23 +61,29 @@ def close():
 def get_pos():
     """
     读取position信息
-    :return:
+    :rtype: generator
     """
     for row in _get_pos("company_position_new"):
         yield row
-    for row in _get_pos("company_position"):
+    for row in _get_pos("company_position", 500000):
         yield row
     # for row in _get_pos("company_position_old"):
     #     yield row
+    pass
 
 
-def _get_pos(table_name):
+def _get_pos(table_name, limit=None):
     """
     读取单个表的position信息
-    :param table_name:
-    :return:
+    :type table_name: str or unicode
+    :type limit: int or NoneType
+    :rtype: extensions.cursor
     """
-    sql_pos = "SELECT name, category, description FROM %s;" % (table_name,)
+    if limit:
+        sql_pos = "SELECT name, category, description FROM %s ORDER BY publish_date DESC LIMIT %s;" % (
+            table_name, limit)
+    else:
+        sql_pos = "SELECT name, category, description FROM %s;" % (table_name,)
 
     pgsql_cursor = get_cursor()
     pgsql_cursor.execute(sql_pos)

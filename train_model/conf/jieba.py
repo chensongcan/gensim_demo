@@ -9,9 +9,8 @@ import jieba
 
 def init(parallel=False):
     """
-    jieba分词初始化
-    :param parallel: jieba分词是否并行运行
-    :return:
+    :type parallel: bool
+    :rtype: NoneType
     """
     # 设置结巴分词log级别
     jieba.setLogLevel("INFO")

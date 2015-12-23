@@ -14,7 +14,7 @@ model = None
 
 def _get_doc_col():
     """
-    :return:
+    :rtype: generator
     """
     for row in open("pos_data.txt", "r"):
         yield json.loads(row[:-1], encoding="utf-8")
@@ -22,7 +22,7 @@ def _get_doc_col():
 
 def _get_corpus():
     """
-    :return:
+    :rtype: generator
     """
     for text in _get_doc_col():
         yield dictionary.doc2bow(text)
@@ -31,7 +31,7 @@ def _get_corpus():
 def _build_corpus():
     """
     建立词袋和文档向量
-    :return:
+    :rtype: NoneType
     """
     global dictionary, corpus
     # 抽取词袋
@@ -46,7 +46,7 @@ def _build_corpus():
 def _build_lda():
     """
     建立LDA模型
-    :return:
+    :rtype: gensim.models.LdaMulticore
     """
     # 建立LDA模型
     lda = gensim.models.LdaMulticore(corpus, id2word=dictionary, num_topics=300, passes=200, alpha=50 / 300, eta=0.01)
@@ -57,7 +57,7 @@ def _build_lda():
 def build_lda():
     """
     建立LDA模型
-    :return:
+    :rtype: NoneType
     """
     global model
     _build_corpus()

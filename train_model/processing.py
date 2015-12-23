@@ -16,8 +16,8 @@ import util
 def init(jieba_parallel=False):
     """
     配置中文分词设置
-    :param jieba_parallel: jieba分词是否并行运行
-    :return:
+    :type jieba_parallel: bool
+    :rtype: NoneType
     """
     conf.jieba.init(jieba_parallel)
 
@@ -29,7 +29,7 @@ def init(jieba_parallel=False):
 def text_process():
     """
     处理position的文字信息
-    :return:
+    :rtype: NoneType
     """
     with open("pos_data.txt", "w") as f:
         for row in _clean_content():
@@ -43,7 +43,7 @@ def text_process():
 def _clean_content():
     """
     文本清洗
-    :return:
+    :rtype: generator
     """
     # 过滤空白字符
     blank_re = re.compile(r"\s+")
