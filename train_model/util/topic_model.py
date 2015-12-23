@@ -22,7 +22,7 @@ def _get_doc_col():
 
 def _get_corpus(dictionary):
     """
-    :rtype: generator
+    :rtype: __generator
     """
     cnt = 0
     for text in _get_doc_col():

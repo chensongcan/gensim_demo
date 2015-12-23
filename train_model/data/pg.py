@@ -61,11 +61,11 @@ def close():
 def get_pos():
     """
     读取position信息
-    :rtype: generator
+    :rtype: __generator
     """
     for row in _get_pos("company_position_new"):
         yield row
-    for row in _get_pos("company_position", 500000):
+    for row in _get_pos("company_position", 50000):
         yield row
     # for row in _get_pos("company_position_old"):
     #     yield row
@@ -77,7 +77,7 @@ def _get_pos(table_name, limit=None):
     读取单个表的position信息
     :type table_name: str or unicode
     :type limit: int or NoneType
-    :rtype: extensions.cursor
+    :rtype: __generator
     """
     if limit:
         sql_pos = "SELECT name, category, description FROM %s ORDER BY publish_date DESC LIMIT %s;" % (
@@ -87,6 +87,7 @@ def _get_pos(table_name, limit=None):
 
     pgsql_cursor = get_cursor()
     pgsql_cursor.execute(sql_pos)
+    for row in pgsql_cursor:
+        yield row
 
     logger.log.info("[%s] has been read, count: %s." % (table_name, pgsql_cursor.rowcount,))
-    return pgsql_cursor

@@ -13,15 +13,17 @@ import logger
 import util
 
 
-def init(jieba_parallel=False):
+def init(jieba_parallel=False, gensim_warning=False):
     """
     配置中文分词设置
     :type jieba_parallel: bool
+    :type gensim_warning: bool
     :rtype: NoneType
     """
     conf.jieba.init(jieba_parallel)
 
-    gensim.logger.setLevel("WARNING")
+    if gensim_warning:
+        gensim.logger.setLevel("WARNING")
 
     logger.log.info("module [processing] initialized.")
 
@@ -49,7 +51,7 @@ def text_process():
 def _clean_content():
     """
     文本清洗
-    :rtype: generator
+    :rtype: __generator
     """
     # 过滤空白字符
     blank_re = re.compile(r"\s+")
