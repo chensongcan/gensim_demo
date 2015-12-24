@@ -11,7 +11,6 @@ import jieba
 import conf
 import data
 import logger
-import util
 
 
 def init(jieba_parallel=False, gensim_warning=False):
@@ -22,21 +21,20 @@ def init(jieba_parallel=False, gensim_warning=False):
     :rtype: NoneType
     """
     conf.jieba.init(jieba_parallel)
-
     if gensim_warning:
         gensim.logger.setLevel("WARNING")
+    logger.log.info("module [text_process] initialized.")
 
-    logger.log.info("module [processing] initialized.")
 
-
-def _clean_texts():
+def _clean_texts(pos_list):
     """
     清洗文本
+    :type pos_list: list or __generator
     :rtype: __generator
     """
     # 过滤空白字符
     blank_re = re.compile(r"\s+")
-    for row in data.pg.get_pos():
+    for row in pos_list:
         text = blank_re.split(row["description"])
         # 分词
         text_splited = reduce(lambda x, y: x + jieba.lcut(y), text, [])
@@ -45,32 +43,30 @@ def _clean_texts():
         yield text_filtered
 
 
-def _save_texts(path):
+def _save_texts(path, pos_list):
     """
     保存文本
     :type path: str or unicode
+    :type pos_list: list or __generator
     :rtype: None
     """
     with open(path, "w") as f:
         cnt = 0
-        for row in _clean_texts():
+        for row in _clean_texts(pos_list):
             f.write(json.dumps(row, encoding="utf-8") + "\n")
-
             cnt += 1
-            if cnt % 1000 == 0:
+            if cnt % 2000 == 0:
                 logger.log.info("texts is saving... number: %s." % (cnt,))
-
     logger.log.info("texts was saved on disk.")
 
 
-def text_process():
+def run(path, pos_list):
     """
     处理position的文字信息
+    :type path: str or unicode
+    :type pos_list: list or __generator
     :rtype: NoneType
     """
-    if not os.path.exists("tmp/pos_data.txt"):
-        _save_texts("tmp/pos_data.txt")
-
-    util.topic_model.build_lda()
-
+    if not os.path.exists(path):
+        _save_texts(path, pos_list)
     logger.log.info("texts was processed.")

@@ -58,6 +58,17 @@ def close():
     logger.log.info("postgresql connection closed")
 
 
+def get_train_pos():
+    """
+    读取训练用position信息
+    :rtype: __generator
+    """
+    for row in _get_pos("company_position_new"):
+        yield row
+    for row in _get_pos("company_position", 100000):
+        yield row
+
+
 def get_pos():
     """
     读取position信息
@@ -65,11 +76,6 @@ def get_pos():
     """
     for row in _get_pos("company_position_new"):
         yield row
-    for row in _get_pos("company_position", 100000):
-        yield row
-    # for row in _get_pos("company_position_old"):
-    #     yield row
-    pass
 
 
 def _get_pos(table_name, limit=None):
