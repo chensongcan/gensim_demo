@@ -65,7 +65,7 @@ def get_pos():
     """
     for row in _get_pos("company_position_new"):
         yield row
-    for row in _get_pos("company_position", 50000):
+    for row in _get_pos("company_position", 100000):
         yield row
     # for row in _get_pos("company_position_old"):
     #     yield row

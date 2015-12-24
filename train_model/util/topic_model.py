@@ -68,7 +68,7 @@ def _build_lda(corpus, path):
     :rtype: gensim.models.LdaMulticore
     """
     # 建立LDA模型
-    lda = gensim.models.LdaMulticore(corpus, num_topics=300, passes=30, alpha=50 / 300, eta=0.01)
+    lda = gensim.models.LdaMulticore(corpus, num_topics=300, passes=50, alpha=50 / 300, eta=0.01)
     lda.save(path)
 
     logger.log.info("lda model was saved on disk.")
