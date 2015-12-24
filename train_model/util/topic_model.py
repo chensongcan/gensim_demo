@@ -55,7 +55,7 @@ def _build_corpus(dictionary, data, path=None):
     :type dictionary: gensim.corpora.Dictionary
     :type data: str or unicode
     :type path: str or unicode or None
-    :rtype: gensim.corpora.MmCorpus
+    :rtype: __generator or gensim.corpora.MmCorpus
     """
     if path and os.path.exists(path):
         corpus = gensim.corpora.MmCorpus(path)
@@ -65,6 +65,7 @@ def _build_corpus(dictionary, data, path=None):
         if path:
             gensim.corpora.MmCorpus.serialize(path, corpus)
             logger.log.info("corpus was saved on disk.")
+            corpus = gensim.corpora.MmCorpus(path)
     return corpus
 
 
