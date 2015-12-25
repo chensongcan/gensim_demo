@@ -58,26 +58,6 @@ def close():
     logger.log.info("postgresql connection closed")
 
 
-def get_train_pos():
-    """
-    读取训练用position信息
-    :rtype: __generator
-    """
-    for row in _get_pos("company_position_new"):
-        yield row
-    for row in _get_pos("company_position", 100000):
-        yield row
-
-
-def get_pos():
-    """
-    读取position信息
-    :rtype: __generator
-    """
-    for row in _get_pos("company_position_new"):
-        yield row
-
-
 def _get_pos(table_name, limit=None):
     """
     读取单个表的position信息
@@ -97,3 +77,57 @@ def _get_pos(table_name, limit=None):
         yield row
 
     logger.log.info("[%s] has been read, count: %s." % (table_name, pgsql_cursor.rowcount,))
+
+
+def get_train_pos():
+    """
+    读取训练用position信息
+    :rtype: __generator
+    """
+    for row in _get_pos("company_position_new"):
+        yield row
+    for row in _get_pos("company_position", 200000):
+        yield row
+
+
+def get_pos():
+    """
+    读取company_position_new信息
+    :rtype: list
+    """
+    sql_pos = """SELECT company_position_new.id AS id, company_position_new.name AS name,
+                        city.name AS city, position_type.name AS category,
+                        company_position_new.company_id AS company_id,
+                        company_position_new.education_id AS education_id,
+                        company_position_new.description AS description,
+                        company_position_new.publish_date AS publish_date,
+                        position_permission.school AS school, position_permission.major AS major,
+                        position_permission.grade_max AS grade_max, position_permission.sex AS sex
+                 FROM company_position_new
+                      LEFT JOIN position_permission ON company_position_new.id = position_permission.position_id
+                      LEFT JOIN city ON company_position_new.city_id = city.id
+                      LEFT JOIN position_type ON company_position_new.category = position_type.id
+                 WHERE company_position_new.deleted = 0
+                       AND (company_position_new.expire_date > CURRENT_DATE
+                       OR company_position_new.expire_date IS NULL);"""
+
+    pgsql_cursor = get_cursor()
+    pgsql_cursor.execute(sql_pos)
+    raw_pos = pgsql_cursor.fetchall()
+
+    logger.log.info("[info about position] has been read, count: %s." % (len(raw_pos),))
+    return raw_pos
+
+
+def get_school():
+    """
+    读取school_info表信息
+    :rtype: list
+    """
+    sql = "SELECT name, is_985, is_211, city FROM school_info;"
+    pgsql_cursor = get_cursor()
+    pgsql_cursor.execute(sql)
+    raw = pgsql_cursor.fetchall()
+
+    logger.log.info("[school_info] has been read, count: %d." % (len(raw),))
+    return raw

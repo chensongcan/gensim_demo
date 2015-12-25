@@ -3,6 +3,7 @@
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import unicode_literals
+import codecs
 import json
 import os
 import re
@@ -50,10 +51,10 @@ def _save_texts(path, pos_list):
     :type pos_list: list or __generator
     :rtype: None
     """
-    with open(path, "w") as f:
+    with codecs.open(path, "w", encoding="utf-8") as f:
         cnt = 0
         for row in _clean_texts(pos_list):
-            f.write(json.dumps(row, encoding="utf-8") + "\n")
+            f.write(json.dumps(row, ensure_ascii=False) + "\n")
             cnt += 1
             if cnt % 2000 == 0:
                 logger.log.info("texts is saving... number: %s." % (cnt,))
