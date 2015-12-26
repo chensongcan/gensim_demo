@@ -1,4 +1,0 @@
-gensim
-jieba
-nltk
-psycopg2
